@@ -6,7 +6,6 @@ import type { HistoryItem } from '@/hooks/use-progress';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { FileQuestion, MessageCircle, ToyBrick, History as HistoryIcon } from 'lucide-react';
 import React from 'react';
@@ -17,6 +16,8 @@ const iconMap = {
     'role-play': <MessageCircle className="h-5 w-5" />,
 };
 
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 function HistoryDetailView({ item }: { item: HistoryItem }) {
     return (
         <DialogContent className="max-w-2xl">
@@ -26,7 +27,7 @@ function HistoryDetailView({ item }: { item: HistoryItem }) {
                     {item.title}
                 </DialogTitle>
                 <DialogDescription>
-                    Completed on {new Date(item.timestamp).toLocaleString()}
+                    {capitalize(item.details.domain)} domain &bull; Completed on {new Date(item.timestamp).toLocaleString()}
                 </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-4">
@@ -34,14 +35,14 @@ function HistoryDetailView({ item }: { item: HistoryItem }) {
                     <div className="space-y-2">
                         <p><strong>Topic:</strong> {item.details.topic}</p>
                         <p><strong>Difficulty:</strong> {item.details.difficulty}</p>
-                        <p><strong>Score:</strong> {item.details.score} / {item.details.totalQuestions}</p>
-                        <h4 className="font-semibold mt-4">Questions:</h4>
+                        <p className="font-bold">Score: {item.details.score} / {item.details.totalQuestions}</p>
+                        <h4 className="font-semibold mt-4">Questions & Answers:</h4>
                         <ul className="space-y-3">
                             {item.details.questions.map((q: any, i: number) => (
                                 <li key={i} className="p-3 bg-secondary rounded-md">
-                                    <p className="font-medium">{q.question}</p>
+                                    <p className="font-medium">{i+1}. {q.question}</p>
                                     <p className={`text-sm ${q.isCorrect ? 'text-green-600' : 'text-red-600'}`}>
-                                        Your answer: {q.selectedAnswer} {q.isCorrect ? '(Correct)' : `(Correct: ${q.correctAnswer})`}
+                                        Your answer: {q.selectedAnswer} {q.isCorrect ? '✓' : `(Correct answer: ${q.correctAnswer})`}
                                     </p>
                                 </li>
                             ))}
@@ -52,22 +53,22 @@ function HistoryDetailView({ item }: { item: HistoryItem }) {
                     <div className="space-y-2">
                         <p><strong>Description:</strong> {item.details.description}</p>
                         <h4 className="font-semibold mt-4">Tasks:</h4>
-                        <ul className="list-disc list-inside">
+                        <ul className="list-disc list-inside space-y-1">
                             {item.details.tasks.map((task: string, i: number) => <li key={i}>{task}</li>)}
                         </ul>
                     </div>
                 )}
                 {item.type === 'role-play' && item.details && (
                     <div className="space-y-2">
-                        <p><strong>Scenario:</strong> {item.details.scenarioDescription}</p>
+                        <p><strong>Scenario:</strong> {item.details.description}</p>
                         <p><strong>Your Role:</strong> {item.details.userRole}</p>
                         <p><strong>AI's Role:</strong> {item.details.aiRole}</p>
-                        <h4 className="font-semibold mt-4">Conversation:</h4>
-                        <div className="space-y-2">
+                        <h4 className="font-semibold mt-4">Conversation Transcript:</h4>
+                        <div className="space-y-2 p-3 bg-secondary rounded-lg">
                             {item.details.history.map((msg: any, i: number) => (
-                                <div key={i} className={`p-2 rounded-md ${msg.role === 'user' ? 'bg-primary/10' : 'bg-secondary'}`}>
+                                <div key={i} className={`p-2 rounded-md ${msg.role === 'user' ? 'bg-primary/10' : 'bg-background'}`}>
                                     <p className="font-bold text-sm">{msg.role === 'user' ? item.details.userRole : item.details.aiRole}:</p>
-                                    <p>{msg.content}</p>
+                                    <p className="whitespace-pre-wrap">{msg.content}</p>
                                 </div>
                             ))}
                         </div>

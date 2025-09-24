@@ -132,6 +132,7 @@ export default function RolePlayLab({ domain }: { domain: string }) {
             timestamp: new Date().toISOString(),
             details: {
                 ...scenario,
+                domain,
                 history: messages.map(m => ({ role: m.role, content: m.content })),
             },
         });

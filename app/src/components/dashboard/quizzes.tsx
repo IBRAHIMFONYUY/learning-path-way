@@ -87,6 +87,7 @@ export default function Quizzes({ domain }: { domain: string }) {
         title: `Quiz: ${quizParams.topic}`,
         timestamp: new Date().toISOString(),
         details: {
+            domain,
             topic: quizParams.topic,
             difficulty: quizParams.difficulty,
             score: newScore,

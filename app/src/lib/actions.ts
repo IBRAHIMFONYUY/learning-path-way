@@ -98,7 +98,9 @@ export async function generateReportAction(
 ): Promise<FormState<GeneratePersonalizedPerformanceReportOutput>> {
   try {
     const input: GeneratePersonalizedPerformanceReportInput = {
-      learningHistory: JSON.parse(formData.get('progress') as string),
+      learningHistory: formData.get('progress') as string,
+      activityLog: formData.get('history') as string,
+      domain: formData.get('domain') as string,
       // For simplicity, we'll use generic goals and preferences.
       // These could be collected from the user in a settings page in a future iteration.
       goals: 'Improve skills in the selected domain and gain practical experience.',

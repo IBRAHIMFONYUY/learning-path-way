@@ -41,7 +41,7 @@ export default function SimulationPlayground({ domain }: { domain: string }) {
             type: 'simulation',
             title: result.data.title,
             timestamp: new Date().toISOString(),
-            details: result.data
+            details: { ...result.data, domain }
           });
           toast({
             title: "New Simulation Generated!",
