@@ -30,11 +30,6 @@ import {
   generateSimulationScenario,
   type GenerateSimulationScenarioOutput,
 } from '@/ai/flows/generate-simulation-scenario';
-import {
-    generateAchievements,
-    type GenerateAchievementsInput,
-    type GenerateAchievementsOutput,
-} from '@/ai/flows/generate-achievements';
 
 
 type FormState<T> = {
@@ -143,19 +138,3 @@ export async function generateSimulationAction(
     return { data: null, error: e.message || 'Failed to generate simulation.' };
   }
 }
-
-export async function generateAchievementsAction(
-    prevState: FormState<GenerateAchievementsOutput>,
-    formData: FormData
-  ): Promise<FormState<GenerateAchievementsOutput>> {
-    try {
-      const input: GenerateAchievementsInput = {
-        progress: JSON.parse(formData.get('progress') as string),
-        unlockedAchievements: JSON.parse(formData.get('unlockedAchievements') as string),
-      };
-      const result = await generateAchievements(input);
-      return { data: result, error: null };
-    } catch (e: any) {
-      return { data: null, error: e.message || 'Failed to generate achievements.' };
-    }
-  }

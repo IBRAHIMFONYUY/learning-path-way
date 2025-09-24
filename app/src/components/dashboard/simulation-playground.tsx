@@ -9,6 +9,7 @@ import { CheckCircle2, FlaskConical, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '../ui/skeleton';
 import { useProgress } from '@/hooks/use-progress';
+import { v4 as uuidv4 } from 'uuid';
 
 type Simulation = {
   title: string;
@@ -18,7 +19,7 @@ type Simulation = {
 
 export default function SimulationPlayground({ domain }: { domain: string }) {
   const { toast } = useToast();
-  const { incrementSimulationsRun } = useProgress();
+  const { addHistoryItem } = useProgress();
   const [simulation, setSimulation] = useState<Simulation | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -35,10 +36,16 @@ export default function SimulationPlayground({ domain }: { domain: string }) {
       } else {
         setSimulation(result.data);
         if (result.data) {
-          incrementSimulationsRun();
+          addHistoryItem({
+            id: uuidv4(),
+            type: 'simulation',
+            title: result.data.title,
+            timestamp: new Date().toISOString(),
+            details: result.data
+          });
           toast({
             title: "New Simulation Generated!",
-            description: "Your progress has been updated."
+            description: "Your progress and history have been updated."
           })
         }
       }

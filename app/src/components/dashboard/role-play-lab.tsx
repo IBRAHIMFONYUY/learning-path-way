@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useProgress } from '@/hooks/use-progress';
 import { Switch } from '@/components/ui/switch';
+import { v4 as uuidv4 } from 'uuid';
 
 type Message = {
   role: 'user' | 'model';
@@ -42,13 +43,12 @@ export default function RolePlayLab({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
   const [state, formAction, isPending] = useActionState(simulateScenarioAction, initialState);
   const { toast } = useToast();
-  const { incrementRolePlaysCompleted } = useProgress();
+  const { addHistoryItem } = useProgress();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [scenario, setScenario] = useState<Scenario | null>(null);
   const [input, setInput] = useState('');
   const [voiceChatEnabled, setVoiceChatEnabled] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -125,10 +125,19 @@ export default function RolePlayLab({ domain }: { domain: string }) {
 
   const handleNewScenario = () => {
     if (scenario && messages.length > 1) { // 1 initial message from AI
-        incrementRolePlaysCompleted();
+        addHistoryItem({
+            id: uuidv4(),
+            type: 'role-play',
+            title: `Role-Play: ${scenario.aiRole}`,
+            timestamp: new Date().toISOString(),
+            details: {
+                ...scenario,
+                history: messages.map(m => ({ role: m.role, content: m.content })),
+            },
+        });
         toast({
             title: "Role-Play Completed!",
-            description: "Your progress has been updated."
+            description: "Your progress and history have been updated."
         })
     }
     setScenario(null);

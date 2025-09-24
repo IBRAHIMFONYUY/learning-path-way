@@ -28,6 +28,7 @@ import {
   User,
   BarChart3,
   Award,
+  History,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -72,6 +73,7 @@ export default function DashboardLayout({
     { href: `/dashboard/reports?domain=${domain}`, label: 'Reports', icon: BarChart3, value: 'reports' },
     { href: `/dashboard/career?domain=${domain}`, label: 'Career Guide', icon: Briefcase, value: 'career' },
     { href: `/dashboard/achievements?domain=${domain}`, label: 'Achievements', icon: Award, value: 'achievements' },
+    { href: `/dashboard/history?domain=${domain}`, label: 'History', icon: History, value: 'history' },
   ];
 
   const getTabValue = () => {

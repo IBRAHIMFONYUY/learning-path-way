@@ -1,0 +1,79 @@
+
+[
+    {
+        "id": "quiz_novice",
+        "title": "Quiz Novice",
+        "description": "Complete your very first quiz.",
+        "criteria": {
+            "quizzesTaken": 1
+        }
+    },
+    {
+        "id": "quiz_apprentice",
+        "title": "Quiz Apprentice",
+        "description": "Complete 5 quizzes.",
+        "criteria": {
+            "quizzesTaken": 5
+        }
+    },
+    {
+        "id": "quiz_master",
+        "title": "Quiz Master",
+        "description": "Complete 10 quizzes and show your knowledge.",
+        "criteria": {
+            "quizzesTaken": 10
+        }
+    },
+    {
+        "id": "simulation_explorer",
+        "title": "Simulation Explorer",
+        "description": "Run your first simulation scenario.",
+        "criteria": {
+            "simulationsRun": 1
+        }
+    },
+    {
+        "id": "simulation_veteran",
+        "title": "Simulation Veteran",
+        "description": "Run 5 different simulations.",
+        "criteria": {
+            "simulationsRun": 5
+        }
+    },
+    {
+        "id": "role_play_initiate",
+        "title": "Role-Play Initiate",
+        "description": "Complete your first role-play lab.",
+        "criteria": {
+            "rolePlaysCompleted": 1
+        }
+    },
+    {
+        "id": "method_actor",
+        "title": "Method Actor",
+        "description": "Complete 5 role-play labs.",
+        "criteria": {
+            "rolePlaysCompleted": 5
+        }
+    },
+    {
+        "id": "well_rounded",
+        "title": "Well-Rounded Learner",
+        "description": "Complete at least one quiz, one simulation, and one role-play.",
+        "criteria": {
+            "quizzesTaken": 1,
+            "simulationsRun": 1,
+            "rolePlaysCompleted": 1
+        }
+    },
+    {
+        "id": "dedicated_learner",
+        "title": "Dedicated Learner",
+        "description": "Complete a total of 10 activities of any type.",
+        "criteria": {
+            "quizzesTaken": 5,
+            "simulationsRun": 3,
+            "rolePlaysCompleted": 2
+        }
+    }
+]
