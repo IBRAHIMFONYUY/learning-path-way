@@ -1,3 +1,34 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "tech",
+      "description": "A person coding on a laptop with multiple monitors.",
+      "imageUrl": "https://images.unsplash.com/photo-1559842135-8d5e4214ae77?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjb2RpbmclMjBsYXB0b3B8ZW58MHx8fHwxNzU4NzE2ODQ1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coding laptop"
+    },
+    {
+      "id": "art",
+      "description": "An artist's studio with canvases and paints.",
+      "imageUrl": "https://images.unsplash.com/photo-1611248293543-e71973f8b94b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxhcnQlMjBzdHVkaW98ZW58MHx8fHwxNzU4NTk3MjkxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "art studio"
+    },
+    {
+      "id": "medicine",
+      "description": "A medical professional examining an x-ray.",
+      "imageUrl": "https://images.unsplash.com/photo-1581595219618-375a1a48d324?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtZWRpY2FsJTIweHJheXxlbnwwfHx8fDE3NTg3MTY4NDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "medical xray"
+    },
+    {
+      "id": "business",
+      "description": "A modern office with people in a meeting.",
+      "imageUrl": "https://images.unsplash.com/photo-1709715357520-5e1047a2b691?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMG1lZXRpbmd8ZW58MHx8fHwxNzU4NjkwNzQ2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "business meeting"
+    },
+    {
+      "id": "language",
+      "description": "A collection of books in different languages.",
+      "imageUrl": "https://images.unsplash.com/photo-1622137879013-beaca5144a4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxsYW5ndWFnZSUyMGJvb2tzfGVufDB8fHx8MTc1ODcxNjg0NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "language books"
+    }
+  ]
 }
