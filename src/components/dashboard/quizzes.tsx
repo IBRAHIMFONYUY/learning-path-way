@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useActionState } from 'react';
@@ -12,6 +13,7 @@ import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
+import { useProgress } from '@/hooks/use-progress';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -36,6 +38,7 @@ export default function Quizzes({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
   const [state, dispatch] = useActionState(createQuizAction, initialState);
   const { toast } = useToast();
+  const { incrementQuizzesTaken } = useProgress();
 
   const [quiz, setQuiz] = useState<QuizQuestion[] | null>(null);
   const [answers, setAnswers] = useState<Answers>({});
@@ -73,6 +76,11 @@ export default function Quizzes({ domain }: { domain: string }) {
     }
     setScore(newScore);
     setSubmitted(true);
+    incrementQuizzesTaken();
+    toast({
+        title: "Quiz Submitted!",
+        description: `You scored ${newScore} out of ${quiz.length}. Your progress has been updated.`,
+    })
   };
 
   return (

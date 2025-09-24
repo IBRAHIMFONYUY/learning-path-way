@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useActionState, useEffect, useState, useTransition } from 'react';
@@ -7,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle2, FlaskConical, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '../ui/skeleton';
+import { useProgress } from '@/hooks/use-progress';
 
 type Simulation = {
   title: string;
@@ -16,6 +18,7 @@ type Simulation = {
 
 export default function SimulationPlayground({ domain }: { domain: string }) {
   const { toast } = useToast();
+  const { incrementSimulationsRun } = useProgress();
   const [simulation, setSimulation] = useState<Simulation | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -30,13 +33,22 @@ export default function SimulationPlayground({ domain }: { domain: string }) {
         });
       } else {
         setSimulation(result.data);
+        if (result.data) {
+          incrementSimulationsRun();
+          toast({
+            title: "New Simulation Generated!",
+            description: "Your progress has been updated."
+          })
+        }
       }
     });
   };
 
   // Generate a simulation on initial load
   useEffect(() => {
-    generateSimulation();
+    if(!simulation) {
+      generateSimulation();
+    }
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [domain]);
 

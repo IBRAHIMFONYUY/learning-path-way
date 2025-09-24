@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState, useActionState, useRef } from 'react';
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Bot, User, Wand2, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useProgress } from '@/hooks/use-progress';
 
 type Message = {
   role: 'user' | 'model';
@@ -37,6 +39,7 @@ export default function RolePlayLab({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
   const [state, formAction, isPending] = useActionState(simulateScenarioAction, initialState);
   const { toast } = useToast();
+  const { incrementRolePlaysCompleted } = useProgress();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [scenario, setScenario] = useState<Scenario | null>(null);
@@ -103,6 +106,18 @@ export default function RolePlayLab({ domain }: { domain: string }) {
     formAction(formData);
   };
 
+  const handleNewScenario = () => {
+    if (scenario && messages.length > 1) { // 1 initial message from AI
+        incrementRolePlaysCompleted();
+        toast({
+            title: "Role-Play Completed!",
+            description: "Your progress has been updated."
+        })
+    }
+    setScenario(null);
+    setMessages([]);
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
       <Card className="lg:col-span-1 sticky top-6">
@@ -139,7 +154,7 @@ export default function RolePlayLab({ domain }: { domain: string }) {
             {!scenario ? (
               <SubmitButton />
             ) : (
-              <Button onClick={() => setScenario(null)} variant="outline" className="w-full">
+              <Button onClick={handleNewScenario} variant="outline" className="w-full">
                 Start New Scenario
               </Button>
             )}
