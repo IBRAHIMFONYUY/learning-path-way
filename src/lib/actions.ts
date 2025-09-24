@@ -25,6 +25,10 @@ import {
   type SuggestCareerPathsAndSkillsInput,
   type SuggestCareerPathsAndSkillsOutput,
 } from '@/ai/flows/suggest-career-paths-and-skills';
+import {
+  generateSimulationScenario,
+  type GenerateSimulationScenarioOutput,
+} from '@/ai/flows/generate-simulation-scenario';
 
 type FormState<T> = {
   data: T | null;
@@ -117,5 +121,16 @@ export async function suggestCareerAction(
     return { data: result, error: null };
   } catch (e: any) {
     return { data: null, error: e.message || 'Failed to suggest career paths.' };
+  }
+}
+
+export async function generateSimulationAction(
+  domain: string
+): Promise<FormState<GenerateSimulationScenarioOutput>> {
+  try {
+    const result = await generateSimulationScenario({ domain });
+    return { data: result, error: null };
+  } catch (e: any) {
+    return { data: null, error: e.message || 'Failed to generate simulation.' };
   }
 }
