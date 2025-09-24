@@ -103,9 +103,11 @@ export async function generateReportAction(
 ): Promise<FormState<GeneratePersonalizedPerformanceReportOutput>> {
   try {
     const input: GeneratePersonalizedPerformanceReportInput = {
-      learningHistory: formData.get('learningHistory') as string,
-      goals: formData.get('goals') as string,
-      preferences: formData.get('preferences') as string,
+      learningHistory: JSON.parse(formData.get('progress') as string),
+      // For simplicity, we'll use generic goals and preferences.
+      // These could be collected from the user in a settings page in a future iteration.
+      goals: 'Improve skills in the selected domain and gain practical experience.',
+      preferences: 'A preference for hands-on, interactive learning experiences like quizzes and simulations.',
     };
     const result = await generatePersonalizedPerformanceReport(input);
     return { data: result, error: null };

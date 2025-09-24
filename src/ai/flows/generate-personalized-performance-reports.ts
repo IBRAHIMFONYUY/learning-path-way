@@ -12,9 +12,11 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GeneratePersonalizedPerformanceReportInputSchema = z.object({
-  learningHistory: z
-    .string()
-    .describe("A detailed record of the user's learning activities, including topics studied, quiz scores, lab performance, and simulation results."),
+  learningHistory: z.object({
+    quizzesTaken: z.number().describe('The number of quizzes the user has completed.'),
+    simulationsRun: z.number().describe('The number of simulations the user has run.'),
+    rolePlaysCompleted: z.number().describe('The number of role-play scenarios the user has completed.'),
+  }).describe("A detailed record of the user's learning activities."),
   goals: z.string().describe('The user-defined learning goals and objectives.'),
   preferences: z
     .string()
@@ -46,7 +48,11 @@ const prompt = ai.definePrompt({
 
   Based on the student's learning history, goals, and preferences, provide a detailed performance report.
 
-  Learning History: {{{learningHistory}}}
+  Learning History:
+  - Quizzes Taken: {{{learningHistory.quizzesTaken}}}
+  - Simulations Run: {{{learningHistory.simulationsRun}}}
+  - Role-Plays Completed: {{{learningHistory.rolePlaysCompleted}}}
+
   Goals: {{{goals}}}
   Preferences: {{{preferences}}}
 
