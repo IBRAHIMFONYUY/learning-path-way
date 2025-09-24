@@ -11,7 +11,6 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import { generateSimulationImage } from './generate-simulation-image';
 
 const GenerateSimulationScenarioInputSchema = z.object({
   domain: z.string().describe('The domain for which to generate the simulation (e.g., tech, art, medicine).'),
@@ -22,7 +21,6 @@ const GenerateSimulationScenarioOutputSchema = z.object({
   title: z.string().describe('The title of the simulation scenario.'),
   description: z.string().describe('A detailed description of the scenario, setting the scene for the user.'),
   tasks: z.array(z.string()).describe('A list of 3-5 specific, actionable tasks the user must complete within the simulation.'),
-  imageDataUri: z.string().optional().describe('A data URI of a generated image representing the scenario.'),
 });
 export type GenerateSimulationScenarioOutput = z.infer<typeof GenerateSimulationScenarioOutputSchema>;
 
@@ -52,28 +50,10 @@ const generateSimulationScenarioFlow = ai.defineFlow(
     outputSchema: GenerateSimulationScenarioOutputSchema,
   },
   async (input) => {
-    // Generate text and image in parallel
-    const textPromise = simulationPrompt(input);
-    
-    // Kick off image generation but don't wait for it yet.
-    // We need the description from the text generation first.
-    const imagePromise = textPromise.then(textResult => {
-        if (textResult.output?.description) {
-            return generateSimulationImage({ description: textResult.output.description });
-        }
-        return null;
-    });
-
-    const [textResult, imageResult] = await Promise.all([textPromise, imagePromise]);
-    
-    const scenario = textResult.output;
-    if (!scenario) {
-      throw new Error('Failed to generate simulation text.');
+    const { output } = await simulationPrompt(input);
+    if (!output) {
+      throw new Error('Failed to generate simulation scenario.');
     }
-
-    return {
-        ...scenario,
-        imageDataUri: imageResult?.imageDataUri,
-    };
+    return output;
   }
 );

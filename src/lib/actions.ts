@@ -1,5 +1,6 @@
+"use server";
 
-'use server';
+import { withTimeout, retryAsync } from '@/lib/utils';
 
 import {
   generatePersonalizedLearningPathway,
@@ -53,7 +54,7 @@ export async function generatePathwayAction(
       goals: formData.get('goals') as string,
       domain: formData.get('domain') as string,
     };
-    const result = await generatePersonalizedLearningPathway(input);
+    const result = await withTimeout(generatePersonalizedLearningPathway(input), 20000);
     return { data: result, error: null };
   } catch (e: any) {
     return { data: null, error: e.message || 'Failed to generate pathway.' };
@@ -71,7 +72,7 @@ export async function createQuizAction(
       difficulty: formData.get('difficulty') as 'beginner' | 'intermediate' | 'advanced',
       numberOfQuestions: parseInt(formData.get('numberOfQuestions') as string, 10),
     };
-    const result = await createDomainSpecificQuizzes(input);
+    const result = await withTimeout(createDomainSpecificQuizzes(input), 20000);
     return { data: result, error: null };
   } catch (e: any) {
     return { data: null, error: e.message || 'Failed to create quiz.' };
@@ -88,12 +89,19 @@ export async function simulateScenarioAction(
       userRole: formData.get('userRole') as string,
       aiRole: formData.get('aiRole') as string,
       history: JSON.parse(formData.get('history') as string || '[]'),
-      voiceChatEnabled: false, // Voice chat not implemented in this version
+      voiceChatEnabled: (formData.get('voiceChatEnabled') as string) === 'true',
     };
-    const result = await simulateRealWorldScenario(input);
+    const result = await retryAsync(
+      () => withTimeout(simulateRealWorldScenario(input), 30000),
+      { retries: 2, baseDelayMs: 800 }
+    );
     return { data: result, error: null };
   } catch (e: any) {
-    return { data: null, error: e.message || 'Failed to simulate scenario.' };
+    const message = (e?.message || '').toString();
+    const friendly = message.includes('timed out')
+      ? 'The AI took too long to respond. Please try again; connectivity can vary.'
+      : 'Failed to simulate scenario.';
+    return { data: null, error: friendly };
   }
 }
 
@@ -109,7 +117,7 @@ export async function generateReportAction(
       goals: 'Improve skills in the selected domain and gain practical experience.',
       preferences: 'A preference for hands-on, interactive learning experiences like quizzes and simulations.',
     };
-    const result = await generatePersonalizedPerformanceReport(input);
+    const result = await withTimeout(generatePersonalizedPerformanceReport(input), 20000);
     return { data: result, error: null };
   } catch (e: any) {
     return { data: null, error: e.message || 'Failed to generate report.' };
@@ -126,7 +134,7 @@ export async function suggestCareerAction(
       goals: formData.get('goals') as string,
       interests: formData.get('interests') as string,
     };
-    const result = await suggestCareerPathsAndSkills(input);
+    const result = await withTimeout(suggestCareerPathsAndSkills(input), 20000);
     return { data: result, error: null };
   } catch (e: any) {
     return { data: null, error: e.message || 'Failed to suggest career paths.' };
@@ -137,7 +145,7 @@ export async function generateSimulationAction(
   domain: string
 ): Promise<FormState<GenerateSimulationScenarioOutput>> {
   try {
-    const result = await generateSimulationScenario({ domain });
+    const result = await withTimeout(generateSimulationScenario({ domain }), 20000);
     return { data: result, error: null };
   } catch (e: any) {
     return { data: null, error: e.message || 'Failed to generate simulation.' };
@@ -153,7 +161,7 @@ export async function generateAchievementsAction(
         progress: JSON.parse(formData.get('progress') as string),
         unlockedAchievements: JSON.parse(formData.get('unlockedAchievements') as string),
       };
-      const result = await generateAchievements(input);
+      const result = await withTimeout(generateAchievements(input), 20000);
       return { data: result, error: null };
     } catch (e: any) {
       return { data: null, error: e.message || 'Failed to generate achievements.' };

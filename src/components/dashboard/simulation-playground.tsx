@@ -9,13 +9,12 @@ import { CheckCircle2, FlaskConical, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '../ui/skeleton';
 import { useProgress } from '@/hooks/use-progress';
-import Image from 'next/image';
+// Removed image generation for performance
 
 type Simulation = {
   title: string;
   description: string;
   tasks: string[];
-  imageDataUri?: string;
 };
 
 export default function SimulationPlayground({ domain }: { domain: string }) {
@@ -26,8 +25,7 @@ export default function SimulationPlayground({ domain }: { domain: string }) {
 
   const generateSimulation = () => {
     startTransition(async () => {
-      // Clear previous simulation to show loading state for image
-      setSimulation(null); 
+      setSimulation(null);
       const result = await generateSimulationAction(domain);
       if (result.error) {
         toast({
@@ -35,7 +33,7 @@ export default function SimulationPlayground({ domain }: { domain: string }) {
           title: 'Error',
           description: result.error,
         });
-        setSimulation(null); // Clear on error
+        setSimulation(null);
       } else {
         setSimulation(result.data);
         if (result.data) {
@@ -60,20 +58,6 @@ export default function SimulationPlayground({ domain }: { domain: string }) {
 
   return (
     <Card className="overflow-hidden">
-       {isPending || simulation?.imageDataUri ? (
-          <div className="relative aspect-video w-full bg-secondary">
-            {isPending && !simulation?.imageDataUri && <Skeleton className="w-full h-full" />}
-            {simulation?.imageDataUri && (
-                <Image
-                    src={simulation.imageDataUri}
-                    alt={simulation.title || 'Simulation Scenario'}
-                    fill
-                    className="object-cover"
-                />
-            )}
-         </div>
-       ) : null}
-
       <CardHeader>
         <div className="flex items-start gap-3">
           <FlaskConical className="w-8 h-8 text-primary mt-1 shrink-0" />

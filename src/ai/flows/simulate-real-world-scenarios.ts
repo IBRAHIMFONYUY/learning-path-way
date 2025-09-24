@@ -40,25 +40,32 @@ const simulateRealWorldScenarioPrompt = ai.definePrompt({
   output: {schema: SimulateRealWorldScenarioOutputSchema},
   prompt: `You are an AI that simulates real-world scenarios for users to practice their skills.
 
-You are an expert actor. You will stay in character as "{{aiRole}}". Do not break character.
+You are an expert actor. Stay in character as "{{aiRole}}". Do not break character.
 The user is playing the role of: "{{userRole}}".
 
-The scenario is: "{{scenarioDescription}}".
+Scenario:
+"""
+{{{scenarioDescription}}}
+"""
 
+Conversation history (most recent last):
 {{#if history}}
-Here is the conversation history:
 {{#each history}}
-  {{#if (eq this.role 'user')}}
-User ({{userRole}}): {{{this.content}}}
-  {{else}}
-You ({{aiRole}}): {{{this.content}}}
-  {{/if}}
+Role: {{this.role}}
+Content: {{{this.content}}}
+---
 {{/each}}
 {{else}}
-This is the beginning of the conversation. Start by responding to the user based on the scenario.
+No prior messages.
 {{/if}}
 
-Now, provide your next response as {{aiRole}}.
+Now continue the conversation and provide your next response strictly as {{aiRole}}. Keep it concise and actionable.
+
+Return your result as strict JSON matching this schema:
+{
+  "response": string
+}
+Only output valid JSON, no extra text.
 `,
 });
 
@@ -74,55 +81,60 @@ const simulateRealWorldScenarioFlow = ai.defineFlow(
 
     let audioDataUri: string | undefined = undefined;
     if (voiceChatEnabled) {
-      const ttsOutput = await ai.generate({
-        model: 'googleai/gemini-2.5-flash-preview-tts',
-        config: {
-          responseModalities: ['AUDIO'],
-          speechConfig: {
-            voiceConfig: {
-              prebuiltVoiceConfig: {voiceName: 'Algenib'},
+      try {
+        const ttsOutput = await ai.generate({
+          model: 'googleai/gemini-2.5-flash-preview-tts',
+          config: {
+            responseModalities: ['AUDIO'],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: {voiceName: 'Algenib'},
+              },
             },
           },
-        },
-        prompt: output!.response,
-      });
+          prompt: output!.response,
+        });
 
-      if (ttsOutput.media) {
-        // Convert PCM data to WAV format
-        const audioBuffer = Buffer.from(
-          ttsOutput.media.url.substring(ttsOutput.media.url.indexOf(',') + 1),
-          'base64'
-        );
+        if (ttsOutput.media) {
+          // Convert PCM data to WAV format
+          const audioBuffer = Buffer.from(
+            ttsOutput.media.url.substring(ttsOutput.media.url.indexOf(',') + 1),
+            'base64'
+          );
 
-        const wav = require('wav');
-        async function toWav(
-          pcmData: Buffer,
-          channels = 1,
-          rate = 24000,
-          sampleWidth = 2
-        ): Promise<string> {
-          return new Promise((resolve, reject) => {
-            const writer = new wav.Writer({
-              channels,
-              sampleRate: rate,
-              bitDepth: sampleWidth * 8,
+          const wav = require('wav');
+          async function toWav(
+            pcmData: Buffer,
+            channels = 1,
+            rate = 24000,
+            sampleWidth = 2
+          ): Promise<string> {
+            return new Promise((resolve, reject) => {
+              const writer = new wav.Writer({
+                channels,
+                sampleRate: rate,
+                bitDepth: sampleWidth * 8,
+              });
+
+              let bufs = [] as any[];
+              writer.on('error', reject);
+              writer.on('data', function (d) {
+                bufs.push(d);
+              });
+              writer.on('end', function () {
+                resolve(Buffer.concat(bufs).toString('base64'));
+              });
+
+              writer.write(pcmData);
+              writer.end();
             });
+          }
 
-            let bufs = [] as any[];
-            writer.on('error', reject);
-            writer.on('data', function (d) {
-              bufs.push(d);
-            });
-            writer.on('end', function () {
-              resolve(Buffer.concat(bufs).toString('base64'));
-            });
-
-            writer.write(pcmData);
-            writer.end();
-          });
+          audioDataUri = 'data:audio/wav;base64,' + (await toWav(audioBuffer));
         }
-
-        audioDataUri = 'data:audio/wav;base64,' + (await toWav(audioBuffer));
+      } catch (err) {
+        // Fail soft on TTS issues; still return text response
+        audioDataUri = undefined;
       }
     }
 
