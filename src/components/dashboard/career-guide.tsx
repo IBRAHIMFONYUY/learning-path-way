@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge';
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" disabled={pending} className="w-full">
       {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
       Get Suggestions
     </Button>
@@ -43,19 +43,19 @@ export default function CareerGuide({ domain }: { domain: string }) {
     }
   }, [state.error, toast]);
 
-  const renderList = (items: string[] | undefined) => (
+  const renderList = (items: string[] | undefined, placeholder: string) => (
     <div className="flex flex-wrap gap-2">
       {items && items.length > 0 ? (
-        items.map((item, index) => <Badge key={index} variant="secondary">{item}</Badge>)
+        items.map((item, index) => <Badge key={index} variant="secondary" className="text-base py-1 px-3">{item}</Badge>)
       ) : (
-        <p className="text-sm text-muted-foreground">No suggestions yet.</p>
+        <p className="text-sm text-muted-foreground">{placeholder}</p>
       )}
     </div>
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <Card className="lg:col-span-1">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <Card className="lg:col-span-1 sticky top-6">
         <form action={dispatch}>
           <CardHeader>
             <CardTitle>AI Career &amp; Skill Guide</CardTitle>
@@ -107,34 +107,34 @@ export default function CareerGuide({ domain }: { domain: string }) {
       <div className="lg:col-span-2 space-y-6">
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Briefcase /> Suggested Career Paths</CardTitle>
+                <CardTitle className="flex items-center gap-2"><Briefcase className="text-primary"/> Suggested Career Paths</CardTitle>
             </CardHeader>
             <CardContent>
-                {renderList(state.data?.careerPaths)}
+                {renderList(state.data?.careerPaths, "Career path suggestions will appear here.")}
             </CardContent>
         </Card>
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><GraduationCap /> Recommended Skills to Develop</CardTitle>
+                <CardTitle className="flex items-center gap-2"><GraduationCap className="text-primary"/> Recommended Skills to Develop</CardTitle>
             </CardHeader>
             <CardContent>
-                 {renderList(state.data?.skills)}
+                 {renderList(state.data?.skills, "Skill recommendations will appear here.")}
             </CardContent>
         </Card>
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Award /> Relevant Certifications</CardTitle>
+                <CardTitle className="flex items-center gap-2"><Award className="text-primary"/> Relevant Certifications</CardTitle>
             </CardHeader>
             <CardContent>
-                 {renderList(state.data?.certifications)}
+                 {renderList(state.data?.certifications, "Certification suggestions will appear here.")}
             </CardContent>
         </Card>
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Sparkles /> Project &amp; Job Opportunities</CardTitle>
+                <CardTitle className="flex items-center gap-2"><Sparkles className="text-primary"/> Project &amp; Job Opportunities</CardTitle>
             </CardHeader>
             <CardContent>
-                {renderList(state.data?.opportunities)}
+                {renderList(state.data?.opportunities, "Project and job opportunities will appear here.")}
             </CardContent>
         </Card>
       </div>

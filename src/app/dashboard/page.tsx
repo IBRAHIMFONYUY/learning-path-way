@@ -11,6 +11,7 @@ import PerformanceReport from '@/components/dashboard/performance-report';
 import CareerGuide from '@/components/dashboard/career-guide';
 import { GitMerge, FileQuestion, MessageCircle, ToyBrick, BarChart3, Briefcase } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 function DashboardContent() {
   const searchParams = useSearchParams();
@@ -20,13 +21,13 @@ function DashboardContent() {
 
   return (
     <>
-      <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl font-headline">
+      <div className="flex items-center mb-6">
+        <h1 className="text-2xl font-semibold md:text-3xl font-headline">
           {capitalize(domain)} Learning Dashboard
         </h1>
       </div>
-      <Tabs defaultValue="pathway" className="flex-grow flex flex-col">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+      <Tabs defaultValue="pathway" className="space-y-4">
+        <TabsList>
           <TabsTrigger value="pathway"><GitMerge className="mr-2 h-4 w-4" />Pathway</TabsTrigger>
           <TabsTrigger value="quizzes"><FileQuestion className="mr-2 h-4 w-4" />Quizzes</TabsTrigger>
           <TabsTrigger value="labs"><MessageCircle className="mr-2 h-4 w-4" />Labs</TabsTrigger>
@@ -34,14 +35,12 @@ function DashboardContent() {
           <TabsTrigger value="reports"><BarChart3 className="mr-2 h-4 w-4" />Reports</TabsTrigger>
           <TabsTrigger value="career"><Briefcase className="mr-2 h-4 w-4" />Career</TabsTrigger>
         </TabsList>
-        <div className="flex-grow mt-4">
-          <TabsContent value="pathway"><LearningPathway domain={domain} /></TabsContent>
-          <TabsContent value="quizzes"><Quizzes domain={domain} /></TabsContent>
-          <TabsContent value="labs"><RolePlayLab domain={domain} /></TabsContent>
-          <TabsContent value="simulations"><SimulationPlayground domain={domain} /></TabsContent>
-          <TabsContent value="reports"><PerformanceReport domain={domain} /></TabsContent>
-          <TabsContent value="career"><CareerGuide domain={domain} /></TabsContent>
-        </div>
+        <TabsContent value="pathway"><LearningPathway domain={domain} /></TabsContent>
+        <TabsContent value="quizzes"><Quizzes domain={domain} /></TabsContent>
+        <TabsContent value="labs"><RolePlayLab domain={domain} /></TabsContent>
+        <TabsContent value="simulations"><SimulationPlayground domain={domain} /></TabsContent>
+        <TabsContent value="reports"><PerformanceReport domain={domain} /></TabsContent>
+        <TabsContent value="career"><CareerGuide domain={domain} /></TabsContent>
       </Tabs>
     </>
   );

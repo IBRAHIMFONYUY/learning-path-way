@@ -7,14 +7,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Wand2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending}>
+    <Button type="submit" disabled={pending} className="w-full">
       {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
       Generate Pathway
     </Button>
@@ -24,6 +25,7 @@ function SubmitButton() {
 export default function LearningPathway({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
   const [state, dispatch] = useActionState(generatePathwayAction, initialState);
+  const { pending } = useFormStatus();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -46,8 +48,8 @@ export default function LearningPathway({ domain }: { domain: string }) {
     });
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <Card className="lg:col-span-1">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <Card className="lg:col-span-1 sticky top-6">
         <form action={dispatch}>
           <CardHeader>
             <CardTitle>Learning Pathway Generator</CardTitle>
@@ -102,20 +104,31 @@ export default function LearningPathway({ domain }: { domain: string }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {state.data?.learningPathway ? (
-            <Accordion type="single" collapsible className="w-full">
+          {pending ? (
+             <div className="space-y-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-20 w-full" />
+            </div>
+          ) : state.data?.learningPathway ? (
+            <Accordion type="single" collapsible className="w-full" defaultValue={parsedPathway?.[0].id}>
               {parsedPathway?.map(item => (
                 <AccordionItem value={item.id} key={item.id}>
-                  <AccordionTrigger>{item.title}</AccordionTrigger>
+                  <AccordionTrigger className="text-lg font-semibold">{item.title}</AccordionTrigger>
                   <AccordionContent>
-                    <div className="prose prose-sm max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: item.content.replace(/\n/g, '<br />') }} />
+                    <div className="prose prose-sm max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: item.content.replace(/\n/g, '<br />').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
                   </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
           ) : (
-            <div className="text-center text-muted-foreground py-12">
-              Your generated learning pathway will appear here.
+            <div className="text-center text-muted-foreground py-24 flex flex-col items-center justify-center space-y-4">
+                <div className="p-4 bg-secondary rounded-full">
+                    <Wand2 className="h-12 w-12 text-primary" />
+                </div>
+                <p className="text-lg">Your generated learning pathway will appear here.</p>
+                <p className="text-sm max-w-sm">Fill out the form on the left and click "Generate Pathway" to see the magic happen!</p>
             </div>
           )}
         </CardContent>

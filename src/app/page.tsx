@@ -2,6 +2,9 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { DomainSelector } from '@/components/domain-selector';
 import { Logo } from '@/app/logo';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Home() {
   const domains = [
@@ -14,23 +17,29 @@ export default function Home() {
   const images = Object.fromEntries(PlaceHolderImages.map(img => [img.id, img]));
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
         <Logo />
         <Button variant="ghost">Sign In</Button>
       </header>
       <main className="flex-grow">
         <section
-          className="py-20 md:py-32"
-          style={{ background: 'linear-gradient(135deg, hsl(197, 71%, 73%), hsl(204, 100%, 97%))' }}
+          className="relative py-24 md:py-40"
         >
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl md:text-6xl font-bold font-headline text-primary-foreground tracking-tighter mb-4">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background" />
+           <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'radial-gradient(circle, hsl(var(--primary) / 0.1), transparent 60%)'}} />
+          <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="text-4xl md:text-6xl font-bold font-headline text-foreground tracking-tighter mb-4">
               Welcome to AdaptLearn
             </h1>
-            <p className="max-w-3xl mx-auto text-lg md:text-xl text-primary-foreground/80 mb-8">
+            <p className="max-w-3xl mx-auto text-lg md:text-xl text-muted-foreground mb-8">
               Your personalized, AI-driven learning journey starts here. Select your domain of interest and let our AI craft a unique educational pathway just for you.
             </p>
+             <Link href="#domain-selection">
+                <Button size="lg">
+                    Get Started <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+            </Link>
           </div>
         </section>
 
@@ -44,7 +53,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <footer className="bg-secondary text-secondary-foreground py-6">
+      <footer className="bg-secondary/50 text-secondary-foreground py-6">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
           <p>&copy; {new Date().getFullYear()} AdaptLearn. All rights reserved.</p>
         </div>
