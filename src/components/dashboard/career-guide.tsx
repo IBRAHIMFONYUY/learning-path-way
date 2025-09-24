@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { suggestCareerAction from '@/lib/actions';
+import { suggestCareerAction } from '@/lib/actions';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
