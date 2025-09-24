@@ -20,6 +20,7 @@ import {
   FileQuestion,
   GitMerge,
   LayoutDashboard,
+  LogOut,
   MessageCircle,
   Settings,
   ToyBrick,
@@ -35,8 +36,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/use-auth';
+import { useEffect } from 'react';
 
 export default function DashboardLayout({
   children,
@@ -44,16 +47,30 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { user, loading, logout } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
 
   const menuItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '#', label: 'Learning Pathway', icon: GitMerge },
-    { href: '#', label: 'Quizzes', icon: FileQuestion },
-    { href: '#', label: 'Role-Play Labs', icon: MessageCircle },
-    { href: '#', label: 'Simulations', icon: ToyBrick },
-    { href: '#', label: 'Reports', icon: BarChart3 },
-    { href: '#', label: 'Career Guide', icon: Briefcase },
+    { href: '/dashboard/pathway', label: 'Learning Pathway', icon: GitMerge },
+    { href: '/dashboard/quizzes', label: 'Quizzes', icon: FileQuestion },
+    { href: '/dashboard/labs', label: 'Role-Play Labs', icon: MessageCircle },
+    { href: '/dashboard/simulations', label: 'Simulations', icon: ToyBrick },
+    { href: '/dashboard/reports', label: 'Reports', icon: BarChart3 },
+    { href: '/dashboard/career', label: 'Career Guide', icon: Briefcase },
   ];
+
+  if (loading || !user) {
+    // You can show a loading spinner here
+    return <div className="flex h-screen w-full items-center justify-center">Loading...</div>;
+  }
 
   return (
     <SidebarProvider>
@@ -104,8 +121,8 @@ export default function DashboardLayout({
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="@user" />
-                  <AvatarFallback>U</AvatarFallback>
+                  <AvatarImage src={`https://i.pravatar.cc/150?u=${user.email}`} alt={user.name} />
+                  <AvatarFallback>{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <span className="sr-only">Toggle user menu</span>
               </Button>
@@ -116,11 +133,14 @@ export default function DashboardLayout({
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={logout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-secondary/40">
           {children}
         </main>
       </SidebarInset>
