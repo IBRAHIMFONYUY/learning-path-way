@@ -11,6 +11,7 @@ import { Loader2, Wand2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useProgress } from '@/hooks/use-progress';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -25,8 +26,10 @@ function SubmitButton() {
 export default function LearningPathway({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
   const [state, dispatch] = useActionState(generatePathwayAction, initialState);
-  const { pending } = useFormStatus();
   const { toast } = useToast();
+  const { progress } = useProgress();
+
+  const progressSummary = `Completed ${progress.quizzesTaken} quizzes, ${progress.simulationsRun} simulations, and ${progress.rolePlaysCompleted} role-plays.`;
 
   useEffect(() => {
     if (state.error) {
@@ -60,13 +63,14 @@ export default function LearningPathway({ domain }: { domain: string }) {
           <CardContent className="space-y-4">
             <input type="hidden" name="domain" value={domain} />
             <div className="space-y-2">
-              <Label htmlFor="skills">Current Skills</Label>
+              <Label htmlFor="skills">Current Skills & Progress</Label>
               <Textarea
                 id="skills"
                 name="skills"
                 placeholder="e.g., Basic Python, HTML/CSS"
                 required
-                rows={3}
+                rows={4}
+                defaultValue={`Beginner in ${domain}. Current progress: ${progressSummary}`}
               />
             </div>
             <div className="space-y-2">
@@ -77,6 +81,7 @@ export default function LearningPathway({ domain }: { domain: string }) {
                 placeholder="e.g., Project-based learning, visual examples"
                 required
                 rows={3}
+                defaultValue="I prefer hands-on, project-based learning and interactive simulations."
               />
             </div>
             <div className="space-y-2">
@@ -87,6 +92,7 @@ export default function LearningPathway({ domain }: { domain: string }) {
                 placeholder="e.g., Become a full-stack developer in 6 months"
                 required
                 rows={3}
+                defaultValue={`I want to become proficient in the core concepts of ${domain}.`}
               />
             </div>
           </CardContent>
@@ -104,14 +110,7 @@ export default function LearningPathway({ domain }: { domain: string }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {pending ? (
-             <div className="space-y-4">
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-20 w-full" />
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-20 w-full" />
-            </div>
-          ) : state.data?.learningPathway ? (
+          {state.data?.learningPathway ? (
             <Accordion type="single" collapsible className="w-full" defaultValue={parsedPathway?.[0].id}>
               {parsedPathway?.map(item => (
                 <AccordionItem value={item.id} key={item.id}>

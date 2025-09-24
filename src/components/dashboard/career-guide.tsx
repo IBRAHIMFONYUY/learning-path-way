@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Briefcase, Award, GraduationCap, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
+import { useProgress } from '@/hooks/use-progress';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -21,17 +22,18 @@ function SubmitButton() {
   );
 }
 
-const exampleJourney = `
-- Learning Path: Full-Stack Web Development
-- Completed Courses: JavaScript Basics, React Advanced, Node.js Essentials
-- Projects: E-commerce site, personal portfolio
-- Quiz Average: 88%
-`;
-
 export default function CareerGuide({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
   const [state, dispatch] = useActionState(suggestCareerAction, initialState);
   const { toast } = useToast();
+  const { progress } = useProgress();
+
+  const progressSummary = `
+- Domain Focus: ${domain}
+- Quizzes Completed: ${progress.quizzesTaken}
+- Simulations Run: ${progress.simulationsRun}
+- Role-Plays Completed: ${progress.rolePlaysCompleted}
+`;
 
   useEffect(() => {
     if (state.error) {
@@ -72,7 +74,7 @@ export default function CareerGuide({ domain }: { domain: string }) {
                 placeholder="Summarize your courses, projects, and achievements."
                 required
                 rows={6}
-                defaultValue={exampleJourney}
+                defaultValue={progressSummary.trim()}
               />
             </div>
             <div className="space-y-2">
