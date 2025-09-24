@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useEffect, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { simulateScenarioAction } from '@/lib/actions';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -23,7 +23,7 @@ function SubmitButton() {
 
 export default function RolePlayLab({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
-  const [state, dispatch] = useFormState(simulateScenarioAction, initialState);
+  const [state, dispatch] = useActionState(simulateScenarioAction, initialState);
   const { toast } = useToast();
 
   useEffect(() => {

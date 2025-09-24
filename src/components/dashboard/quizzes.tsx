@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useState, useEffect, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { createQuizAction } from '@/lib/actions';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -34,7 +34,7 @@ type Answers = { [key: number]: number };
 
 export default function Quizzes({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
-  const [state, dispatch] = useFormState(createQuizAction, initialState);
+  const [state, dispatch] = useActionState(createQuizAction, initialState);
   const { toast } = useToast();
 
   const [quiz, setQuiz] = useState<QuizQuestion[] | null>(null);

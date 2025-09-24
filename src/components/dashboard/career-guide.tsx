@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useEffect, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { suggestCareerAction } from '@/lib/actions';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -30,7 +30,7 @@ const exampleJourney = `
 
 export default function CareerGuide({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
-  const [state, dispatch] = useFormState(suggestCareerAction, initialState);
+  const [state, dispatch] = useActionState(suggestCareerAction, initialState);
   const { toast } = useToast();
 
   useEffect(() => {

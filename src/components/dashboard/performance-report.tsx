@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useEffect, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { generateReportAction } from '@/lib/actions';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -29,7 +29,7 @@ const exampleHistory = `
 
 export default function PerformanceReport({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
-  const [state, dispatch] = useFormState(generateReportAction, initialState);
+  const [state, dispatch] = useActionState(generateReportAction, initialState);
   const { toast } = useToast();
 
   useEffect(() => {

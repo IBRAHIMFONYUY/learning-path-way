@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useEffect, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { generatePathwayAction } from '@/lib/actions';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -23,7 +23,7 @@ function SubmitButton() {
 
 export default function LearningPathway({ domain }: { domain: string }) {
   const initialState = { data: null, error: null };
-  const [state, dispatch] = useFormState(generatePathwayAction, initialState);
+  const [state, dispatch] = useActionState(generatePathwayAction, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
