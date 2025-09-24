@@ -76,6 +76,7 @@ export async function simulateScenarioAction(
       scenarioDescription: formData.get('scenarioDescription') as string,
       userRole: formData.get('userRole') as string,
       aiRole: formData.get('aiRole') as string,
+      history: JSON.parse(formData.get('history') as string || '[]'),
       voiceChatEnabled: false, // Voice chat not implemented in this version
     };
     const result = await simulateRealWorldScenario(input);

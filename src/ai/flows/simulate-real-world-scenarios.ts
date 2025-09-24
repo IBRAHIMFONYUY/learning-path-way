@@ -15,6 +15,10 @@ const SimulateRealWorldScenarioInputSchema = z.object({
   userRole: z.string().describe('The role of the user in the scenario.'),
   aiRole: z.string().describe('The role the AI should adopt in the scenario.'),
   voiceChatEnabled: z.boolean().describe('Whether voice chat is enabled for the scenario.'),
+  history: z.array(z.object({
+    role: z.enum(['user', 'model']),
+    content: z.string(),
+  })).optional().describe('The conversation history.'),
 });
 
 export type SimulateRealWorldScenarioInput = z.infer<typeof SimulateRealWorldScenarioInputSchema>;
@@ -36,12 +40,25 @@ const simulateRealWorldScenarioPrompt = ai.definePrompt({
   output: {schema: SimulateRealWorldScenarioOutputSchema},
   prompt: `You are an AI that simulates real-world scenarios for users to practice their skills.
 
-The user will be playing the role of: {{{userRole}}}.
-You will be playing the role of: {{{aiRole}}}.
+You are an expert actor. You will stay in character as "{{aiRole}}". Do not break character.
+The user is playing the role of: "{{userRole}}".
 
-The scenario is described as follows: {{{scenarioDescription}}}.
+The scenario is: "{{scenarioDescription}}".
 
-Generate your response as the assigned role. If voice chat is enabled, indicate that the response can be converted to speech.
+{{#if history}}
+Here is the conversation history:
+{{#each history}}
+  {{#if (eq this.role 'user')}}
+User ({{userRole}}): {{{this.content}}}
+  {{else}}
+You ({{aiRole}}): {{{this.content}}}
+  {{/if}}
+{{/each}}
+{{else}}
+This is the beginning of the conversation. Start by responding to the user based on the scenario.
+{{/if}}
+
+Now, provide your next response as {{aiRole}}.
 `,
 });
 
