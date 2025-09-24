@@ -9,3 +9,4 @@ import '@/ai/flows/create-domain-specific-quizzes.ts';
 import '@/ai/flows/simulate-real-world-scenarios.ts';
 import '@/ai/flows/generate-simulation-scenario.ts';
 import '@/ai/flows/generate-achievements.ts';
+import '@/ai/flows/generate-simulation-image.ts';
