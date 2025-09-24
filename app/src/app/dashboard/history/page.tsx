@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function HistoryPage() {
     return (
-        <Suspense fallback={<Skeleton className="w-full h-full" />}>
+        <Suspense fallback={<Skeleton className="w-full h-[60vh]" />}>
             <History />
         </Suspense>
     )
