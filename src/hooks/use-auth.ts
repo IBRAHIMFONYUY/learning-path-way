@@ -26,7 +26,7 @@ export const useAuth = (): AuthContextType => {
   return context;
 };
 
-// Hook that implements the auth logic
+// Hook that implements the auth logic, intended for use by the AuthProvider
 export const useAuthInternal = (): AuthContextType => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -91,8 +91,3 @@ export const useAuthInternal = (): AuthContextType => {
 
   return { user, loading, login, logout, signup };
 };
-
-// To avoid confusion, the hook that components should import is named useAuth,
-// but the implementation is in useAuthInternal. use-auth.ts exports both, 
-// but the provider uses useAuthInternal. Let's adjust the context provider to use it.
-export { useAuthInternal as useAuth };
