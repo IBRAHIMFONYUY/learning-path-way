@@ -38,8 +38,7 @@ export default function PerformanceReport({ domain }: { domain: string }) {
     }
   }, [state, toast]);
 
-  const handleGenerateReport = () => {
-    const formData = new FormData();
+  const handleGenerateReport = (formData: FormData) => {
     formData.append('progress', JSON.stringify(progress));
     formData.append('history', JSON.stringify(history));
     formData.append('domain', domain);

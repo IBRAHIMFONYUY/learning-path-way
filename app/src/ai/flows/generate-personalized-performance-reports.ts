@@ -14,12 +14,18 @@ import {z} from 'genkit';
 
 const GeneratePersonalizedPerformanceReportInputSchema = z.object({
   domain: z.string().describe('The domain the user is currently focused on.'),
-  learningHistory: z
-    .string()
-    .describe("A JSON string representing the user's progress metrics (quizzes taken, etc.)."),
-  activityLog: z
-    .string()
-    .describe("A JSON string of the user's detailed activity history, including quiz results and simulation details."),
+  learningHistory: z.object({
+    quizzesTaken: z.number(),
+    simulationsRun: z.number(),
+    rolePlaysCompleted: z.number(),
+  }).describe("A summary of the user's progress metrics."),
+  activityLog: z.array(z.object({
+    id: z.string(),
+    type: z.string(),
+    title: z.string(),
+    timestamp: z.string(),
+    details: z.any().optional(),
+  })).describe("A detailed log of the user's activities, including quiz results and simulation details."),
   goals: z.string().describe('The user-defined learning goals and objectives.'),
   preferences: z
     .string()
@@ -52,10 +58,14 @@ const prompt = ai.definePrompt({
   Based on the student's learning history, goals, and preferences for the **{{{domain}}}** domain, provide a detailed performance report.
 
   Learning History Metrics:
-  {{{learningHistory}}}
+  - Quizzes Taken: {{{learningHistory.quizzesTaken}}}
+  - Simulations Run: {{{learningHistory.simulationsRun}}}
+  - Role-Plays Completed: {{{learningHistory.rolePlaysCompleted}}}
 
-  Detailed Activity Log:
-  {{{activityLog}}}
+  Detailed Activity Log (sample, full data provided in context):
+  {{#each activityLog}}
+  - {{this.type}}: {{this.title}} on {{this.timestamp}}
+  {{/each}}
 
   User's Goals: {{{goals}}}
   User's Preferences: {{{preferences}}}
@@ -81,3 +91,4 @@ const generatePersonalizedPerformanceReportFlow = ai.defineFlow(
     return output!;
   }
 );
+
