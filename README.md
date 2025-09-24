@@ -77,15 +77,6 @@ Unlike traditional e-learning, this system is **domain-agnostic** — enabling u
 * ⚡ Next.js / React
 * 🎨 TailwindCSS (UI/UX styling)
 
-### **Backend**
-
-* Django / Node.js
-* REST or GraphQL APIs
-
-### **Database**
-
-* PostgreSQL (structured data)
-* ElasticSearch (intelligent content retrieval)
 
 ### **AI Components**
 
@@ -138,7 +129,3 @@ To empower learners across the globe by providing a **personalized, adaptive, an
 * AR/VR immersive labs
 * Blockchain-based certification
 * Global peer-to-peer mentorship network
-
----
-
-Would you like me to also create a **visual architecture diagram** (frontend, backend, AI modules, database, user flow) in markdown/mermaid for this README? It would make it more professional for GitHub.
