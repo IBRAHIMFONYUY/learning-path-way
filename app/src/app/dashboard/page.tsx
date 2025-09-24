@@ -23,7 +23,7 @@ function DashboardContent() {
         <Card>
             <CardHeader>
                 <CardTitle>Welcome to your Dashboard</CardTitle>
-                <CardDescription>Select a tab above to get started with your personalized learning journey.</CardDescription>
+                <CardDescription>Select a feature from the sidebar to get started with your personalized learning journey.</CardDescription>
             </CardHeader>
             <CardContent>
                 <p>This is your central hub for learning. From here, you can generate a learning pathway, take quizzes, run simulations, and track your progress.</p>
