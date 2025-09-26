@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GitMerge, FileQuestion, MessageCircle, ToyBrick, BarChart3, Briefcase, Award } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import Loader from '@/components/ui/loader';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 
@@ -33,11 +34,7 @@ function DashboardContent() {
 
   return (
     <>
-      <div className="flex items-center mb-6">
-        <h1 className="text-2xl font-semibold md:text-3xl font-headline">
-          {capitalize(domain)} Learning Dashboard
-        </h1>
-      </div>
+      
       <Tabs value={getTabValue()} className="space-y-4">
         <TabsList>
             <TabsTrigger value="overview" asChild>
@@ -70,7 +67,13 @@ function DashboardContent() {
 
 export default function DashboardPage() {
   return (
-    <Suspense fallback={<Skeleton className="w-full h-full" />}>
+    <Suspense
+      fallback={
+        <div className="flex h-64 w-full items-center justify-center">
+          <Loader />
+        </div>
+      }
+    >
       <DashboardContent />
     </Suspense>
   );

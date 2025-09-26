@@ -87,3 +87,24 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Loader styles */
+@layer components {
+  .lpw-loader {
+    --lift: 8px;
+  }
+  .lpw-loader-dot {
+    @apply rounded-full;
+    display: inline-block;
+    transform-origin: center bottom;
+    animation: lpw-bounce 900ms ease-in-out infinite;
+  }
+}
+
+@keyframes lpw-bounce {
+  0% { transform: translateY(0) scale(1); opacity: 0.85; }
+  25% { transform: translateY(calc(var(--lift) * -1)) scale(1.05); opacity: 1; }
+  50% { transform: translateY(0) scale(1); opacity: 0.9; }
+  75% { transform: translateY(calc(var(--lift) * -0.5)) scale(1.02); opacity: 0.95; }
+  100% { transform: translateY(0) scale(1); opacity: 0.85; }
+}

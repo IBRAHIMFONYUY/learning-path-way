@@ -243,7 +243,7 @@ export default function RolePlayLab({ domain }: { domain: string }) {
         }
       }
     };
-    recognition.onerror = () => {
+    recognition.onerror = () => { 
       setRecognitionActive(false);
     };
     recognition.onend = () => {

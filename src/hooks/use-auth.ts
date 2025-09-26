@@ -7,6 +7,8 @@ import { AuthContext } from '@/context/auth-provider';
 type User = {
   name: string;
   email: string;
+  domain: string;
+  password: string;
 };
 
 export type AuthContextType = {
@@ -14,7 +16,7 @@ export type AuthContextType = {
   loading: boolean;
   login: (email: string, pass: string) => boolean;
   logout: () => void;
-  signup: (name: string, email: string, pass: string) => boolean;
+  signup: (name: string, email: string, pass: string, domain: string) => boolean;
 };
 
 // Custom hook to use the auth context
@@ -51,7 +53,7 @@ export const useAuthInternal = (): AuthContextType => {
       const usersJson = localStorage.getItem('adapt-learn-users');
       const users = usersJson ? JSON.parse(usersJson) : {};
       if (users[email] && users[email].password === pass) {
-        const loggedInUser = { name: users[email].name, email };
+        const loggedInUser = { name: users[email].name, email, domain: users[email].domain, password: users[email].password };
         localStorage.setItem('adapt-learn-user', JSON.stringify(loggedInUser));
         setUser(loggedInUser);
         return true;
@@ -63,18 +65,19 @@ export const useAuthInternal = (): AuthContextType => {
     }
   };
 
-  const signup = (name: string, email: string, pass: string): boolean => {
+  const signup = (name: string, email: string, pass: string, domain: string): boolean => {
     try {
       const usersJson = localStorage.getItem('adapt-learn-users');
       const users = usersJson ? JSON.parse(usersJson) : {};
       if (users[email]) {
         return false; // User already exists
       }
-      users[email] = { name, password: pass };
+      users[email] = { name, password: pass, domain };
       localStorage.setItem('adapt-learn-users', JSON.stringify(users));
       
-      const newUser = { name, email };
+      const newUser = { name, email, domain, password: pass };
       localStorage.setItem('adapt-learn-user', JSON.stringify(newUser));
+     
       setUser(newUser);
       return true;
     } catch (error) {

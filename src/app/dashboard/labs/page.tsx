@@ -4,7 +4,7 @@
 import RolePlayLab from '@/components/dashboard/role-play-lab';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import Loader from '@/components/ui/loader';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -66,7 +66,7 @@ function LabsContent() {
 
 export default function LabsPage() {
     return (
-        <Suspense fallback={<Skeleton className="w-full h-full" />}>
+        <Suspense fallback={<div className="flex h-64 w-full items-center justify-center"><Loader /></div>}>
             <LabsContent />
         </Suspense>
     )

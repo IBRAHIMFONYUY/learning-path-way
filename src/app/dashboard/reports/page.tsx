@@ -4,7 +4,7 @@
 import PerformanceReport from '@/components/dashboard/performance-report';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import Loader from '@/components/ui/loader';
 
 function ReportsContent() {
     const searchParams = useSearchParams();
@@ -14,7 +14,7 @@ function ReportsContent() {
 
 export default function ReportsPage() {
     return (
-        <Suspense fallback={<Skeleton className="w-full h-full" />}>
+        <Suspense fallback={<div className="flex h-64 w-full items-center justify-center"><Loader /></div>}>
             <ReportsContent />
         </Suspense>
     )

@@ -4,7 +4,7 @@
 import CareerGuide from '@/components/dashboard/career-guide';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import Loader from '@/components/ui/loader';
 
 function CareerContent() {
     const searchParams = useSearchParams();
@@ -14,7 +14,7 @@ function CareerContent() {
 
 export default function CareerPage() {
     return (
-        <Suspense fallback={<Skeleton className="w-full h-full" />}>
+        <Suspense fallback={<div className="flex h-64 w-full items-center justify-center"><Loader /></div>}>
             <CareerContent />
         </Suspense>
     )

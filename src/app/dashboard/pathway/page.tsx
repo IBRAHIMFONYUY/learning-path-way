@@ -4,7 +4,7 @@
 import LearningPathway from '@/components/dashboard/learning-pathway';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import Loader from '@/components/ui/loader';
 
 function PathwayContent() {
     const searchParams = useSearchParams();
@@ -14,7 +14,7 @@ function PathwayContent() {
 
 export default function PathwayPage() {
     return (
-        <Suspense fallback={<Skeleton className="w-full h-full" />}>
+        <Suspense fallback={<div className="flex h-64 w-full items-center justify-center"><Loader /></div>}>
             <PathwayContent />
         </Suspense>
     )
